@@ -8,9 +8,10 @@ func Test_overlappingPoints(t *testing.T) {
 		gridSize int
 	}
 	tests := []struct {
-		name string
-		args args
-		want int
+		name         string
+		args         args
+		want         int
+		wantDiagonal int
 	}{
 		{
 			name: "example",
@@ -29,13 +30,19 @@ func Test_overlappingPoints(t *testing.T) {
 				},
 				gridSize: 10,
 			},
-			want: 5,
+			want:         5,
+			wantDiagonal: 12,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := overlappingPoints(tt.args.lines, tt.args.gridSize); got != tt.want {
-				t.Errorf("overlappingPoints() = %v, want %v", got, tt.want)
+			if got := overlappingPoints(tt.args.lines, tt.args.gridSize, false); got != tt.want {
+				t.Errorf("overlappingPoints Straight = %v, want %v", got, tt.want)
+			}
+		})
+		t.Run(tt.name, func(t *testing.T) {
+			if got := overlappingPoints(tt.args.lines, tt.args.gridSize, true); got != tt.wantDiagonal {
+				t.Errorf("overlappingPoints Diagonal = %v, want %v", got, tt.wantDiagonal)
 			}
 		})
 	}

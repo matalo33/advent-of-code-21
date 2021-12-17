@@ -30,10 +30,11 @@ func main() {
 		lines = append(lines, line{x1, y1, x2, y2})
 	}
 
-	fmt.Printf("Number of overlapping points: %v\n", overlappingPoints(lines, 1000))
+	fmt.Printf("Number of overlapping points: %v\n", overlappingPoints(lines, 1000, false))
+	fmt.Printf("Number of overlapping points with diagonals: %v\n", overlappingPoints(lines, 1000, true))
 }
 
-func overlappingPoints(lines []line, gridSize int) int {
+func overlappingPoints(lines []line, gridSize int, considerDiagonals bool) int {
 	grid := make([][]int, gridSize)
 	for i := 0; i < gridSize; i++ {
 		grid[i] = make([]int, gridSize)
@@ -47,12 +48,24 @@ func overlappingPoints(lines []line, gridSize int) int {
 				for i := min; i <= max; i++ {
 					grid[line.y1][i]++
 				}
-			} else if line.y1 != line.x2 {
+			} else if line.y1 != line.y2 {
 				//verical
 				min, max := getMinMax(line.y1, line.y2)
 				for i := min; i <= max; i++ {
 					grid[i][line.x1]++
 				}
+			}
+		} else if considerDiagonals {
+			//diagonal
+			deltaX, deltaY := 1, 1
+			if line.x1 > line.x2 {
+				deltaX = -1
+			}
+			if line.y1 > line.y2 {
+				deltaY = -1
+			}
+			for y := 0; y <= pos(line.y1, line.y2); y++ {
+				grid[line.y1+(y*deltaY)][line.x1+(y*deltaX)]++
 			}
 		}
 	}
@@ -65,7 +78,6 @@ func overlappingPoints(lines []line, gridSize int) int {
 			}
 		}
 	}
-
 	return counter
 }
 
@@ -82,4 +94,12 @@ func isLineHorizontalOrVertical(line line) bool {
 		return true
 	}
 	return false
+}
+
+func pos(i1, i2 int) int {
+	res := i1 - i2
+	if res < 0 {
+		return -res
+	}
+	return res
 }
