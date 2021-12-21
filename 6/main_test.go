@@ -13,12 +13,20 @@ func Test_makeFish(t *testing.T) {
 		want int
 	}{
 		{
-			name: "example",
+			name: "80",
 			args: args{
 				fish: []int{3, 4, 3, 1, 2},
 				days: 80,
 			},
 			want: 5934,
+		},
+		{
+			name: "256",
+			args: args{
+				fish: []int{3, 4, 3, 1, 2},
+				days: 256,
+			},
+			want: 26984457539,
 		},
 	}
 	for _, tt := range tests {
